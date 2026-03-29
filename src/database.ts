@@ -1,19 +1,16 @@
 import { MongoClient, Db } from "mongodb"
 
-const uri = process.env.MONGODB_URI!
-
-const client = new MongoClient(uri)
+const client = new MongoClient(process.env.MONGODB_URI!)
 let db: Db
 
-export async function inicializadorBanco(){
+export async function inicializarBanco() {
     await client.connect()
-    db = client.db(" KRATOS ")
-    await db.collection("usuarios").createIndex({ email: 1 } , { unique: true })
-
-    console.log(" Banco de dados MongoDB inicializado! ")
+    db = client.db("KRATOS")
+    await db.collection("usuarios").createIndex({ email: 1 }, { unique: true })
+    console.log("MongoDB conectado!")
 }
 
-export function getDb(){
+export function getDb() {
+    if (!db) throw new Error("Banco não inicializado")
     return db
 }
-

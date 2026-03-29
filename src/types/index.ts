@@ -1,5 +1,6 @@
+import { ObjectId } from "mongodb"
 export interface Usuario {
-    id: number;
+    id: ObjectId;
     nome: string;
     email: string;
     idade?: number;
@@ -20,7 +21,7 @@ export interface AtualizarUsuario {
 }
 
 export interface DeletarUsuario {
-    id: number;
+    id: ObjectId;
 }
 
 export interface ResponseUsuario {

@@ -13,7 +13,7 @@
     "@elysiajs/cors": "^1.4.1",
     "@elysiajs/static": "^1.4.7",
     "elysia": "^1.4.22",
-    "postgres": "^3.4.8",
+    "mongodb": "^7.1.1",
     "zod": "^4.3.5"
   }
 }

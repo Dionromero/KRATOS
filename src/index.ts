@@ -1,10 +1,10 @@
 import { Elysia } from "elysia"
 import { cors } from "@elysiajs/cors"
 import { staticPlugin } from "@elysiajs/static"
-import { inicializarBanco } from "./database"
+import { inicializadorBanco } from "./database"
 import { usuariosRoutes } from "./routes/usuarios"
 
-await inicializarBanco();
+await inicializadorBanco();
 
 const app = new Elysia()
  .use(cors())
@@ -15,6 +15,6 @@ const app = new Elysia()
     timestamp: new Date().toISOString()
  }))
 
- .listen(3000);
+.listen(process.env.PORT ?? 3000)
 
  console.log(`servidor rodando em http://localhost:${app.server?.port}`);

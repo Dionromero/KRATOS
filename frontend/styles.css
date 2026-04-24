@@ -1,0 +1,39 @@
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  font-family: 'Playpen Sans', sans-serif;
+}
+
+.bg-sky-gradient {
+  background: linear-gradient(to bottom, #9fc8d4 0%, #58bddb 100%);
+}
+
+.bounce-delay-1 { animation: bounce 1.4s infinite ease-in-out both; animation-delay: -0.32s; }
+.bounce-delay-2 { animation: bounce 1.4s infinite ease-in-out both; animation-delay: -0.16s; }
+.bounce-delay-3 { animation: bounce 1.4s infinite ease-in-out both; }
+
+@keyframes bounce {
+  0%, 80%, 100% { transform: scale(0); }
+  40% { transform: scale(1); }
+}
+
+@media (max-width: 768px) {
+  .mountain-bg {
+    height: 30vh;
+  }
+
+  #registerForm {
+    margin: 0 1rem;
+  }
+
+  #registerForm .px-12 {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+
+  #registerForm .px-10 {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}

@@ -1,9 +1,14 @@
 // src/pages/Login.tsx
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
+import api from '../../services/api'
 
 export default function Login() {
   const navigate = useNavigate()
+  const [email, setEmail] = useState('')
+  const [senha, setSenha] = useState('')
+  const [erro, setErro] = useState('')
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     const tailwindScript = document.createElement('script')
@@ -20,10 +25,34 @@ export default function Login() {
     }
   }, [])
 
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault()
-    alert('Login simulado com sucesso! 🎉 (Teste Front-end)')
-    navigate('/escolha_perfil')
+    setErro('')
+
+    if (!email || !senha) {
+      setErro('Preencha todos os campos!')
+      return
+    }
+
+    setLoading(true)
+
+    try {
+      const response = await api.post('/auth/login', {
+        email,
+        password: senha
+      })
+
+      // Salvar token e dados do usuário
+      localStorage.setItem('token', response.data.data.token)
+      localStorage.setItem('user', JSON.stringify(response.data.data.user))
+      
+      navigate('/escolha_perfil')
+    } catch (error: any) {
+      const message = error.response?.data?.error?.message || 'E-mail ou senha inválidos.'
+      setErro(message)
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -65,7 +94,9 @@ export default function Login() {
               <input 
                 id="emailInput"
                 type="email" 
-                placeholder="E-mail" 
+                placeholder="E-mail"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 aria-label="Endereço de e-mail"
                 className="w-full bg-brand-inputBg border border-brand-inputBorder rounded-xl pl-12 pr-5 py-3 text-brand-textDark placeholder-brand-inputBorder/80 focus:outline-none focus:ring-2 focus:ring-brand-btnBorder shadow-inner text-lg transition-all duration-300"
                 required
@@ -81,18 +112,27 @@ export default function Login() {
               <input 
                 id="passwordInput"
                 type="password" 
-                placeholder="Senha" 
+                placeholder="Senha"
+                value={senha}
+                onChange={(e) => setSenha(e.target.value)}
                 aria-label="Senha"
                 className="w-full bg-brand-inputBg border border-brand-inputBorder rounded-xl pl-12 pr-5 py-3 text-brand-textDark placeholder-brand-inputBorder/80 focus:outline-none focus:ring-2 focus:ring-brand-btnBorder shadow-inner text-lg transition-all duration-300"
                 required
               />
             </div>
 
-            <div className="flex justify-center pt-8 pb-4">
+            {/* Mensagem de erro */}
+            {erro && (
+              <p className="text-red-500 text-center bg-red-100 p-3 rounded-xl font-medium">{erro}</p>
+            )}
+
+            <div className="flex justify-center pt-4 pb-4">
               <button 
-                type="submit" 
-                className="bg-brand-btnBg text-brand-textDark border-[1.5px] border-brand-btnBorder rounded-xl px-16 py-3 text-xl font-bold hover:bg-[#7da02b] transition-colors shadow-[0px_4px_0px_rgba(93,125,14,0.3)] active:shadow-none active:translate-y-1">
-                ENTRAR
+                type="submit"
+                disabled={loading}
+                className="bg-brand-btnBg text-brand-textDark border-[1.5px] border-brand-btnBorder rounded-xl px-16 py-3 text-xl font-bold hover:bg-[#7da02b] transition-colors shadow-[0px_4px_0px_rgba(93,125,14,0.3)] active:shadow-none active:translate-y-1 disabled:opacity-50"
+              >
+                {loading ? 'Entrando...' : 'ENTRAR'}
               </button>
             </div>
 

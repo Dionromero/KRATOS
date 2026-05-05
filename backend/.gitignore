@@ -1,6 +1,8 @@
 # dependencies (bun install)
 **/node_modules/
 
+node_modules
+
 # output
 out
 dist
@@ -30,7 +32,10 @@ report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 # IntelliJ based IDEs
 .idea
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 009eeb73f56219ea52f108f00e0f0df3453c0075
 # Finder (MacOS) folder config
 .DS_Store
 

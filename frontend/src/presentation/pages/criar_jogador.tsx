@@ -13,7 +13,18 @@ export default function AdicionarJogador() {
   const [dialogAberto, setDialogAberto] = useState(false)
 
   useEffect(() => {
-    // Carregamento nativo otimizado
+    const tailwindScript = document.createElement('script')
+    tailwindScript.src = 'https://cdn.tailwindcss.com'
+    document.head.appendChild(tailwindScript)
+
+    const configScript = document.createElement('script')
+    configScript.src = '/tailwind-config.js'
+    document.head.appendChild(configScript)
+
+    return () => {
+      document.head.removeChild(tailwindScript)
+      document.head.removeChild(configScript)
+    }
   }, [])
 
   // 👇 funções de navegação usando AVATARES

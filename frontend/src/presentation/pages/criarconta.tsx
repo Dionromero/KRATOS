@@ -12,7 +12,18 @@ export default function Cadastro() {
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-    // Carregamento de estilos nativo para maior velocidade
+    const tailwindScript = document.createElement('script')
+    tailwindScript.src = 'https://cdn.tailwindcss.com'
+    document.head.appendChild(tailwindScript)
+
+    const configScript = document.createElement('script')
+    configScript.src = '/tailwind-config.js'
+    document.head.appendChild(configScript)
+
+    return () => {
+      document.head.removeChild(tailwindScript)
+      document.head.removeChild(configScript)
+    }
   }, [])
 
   const handleSubmit = async (event: React.FormEvent) => {

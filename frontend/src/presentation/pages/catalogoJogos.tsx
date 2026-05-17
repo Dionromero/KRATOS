@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 interface Jogo {
@@ -13,93 +13,46 @@ interface Jogo {
 
 const JOGOS_DEMO: Jogo[] = [
   {
-    id: 'drone-fazendeiro',
-    titulo: 'Drone Fazendeiro',
-    descricao: 'Programe um drone para plantar, regar e colher!',
+    id: 'robo-pizzaiolo',
+    titulo: 'Robô Pizzaiolo',
+    descricao: 'Programe um robô para fazer pizzas! Aprenda lógica de programação.',
     categoria: 'lógica',
     idadeMin: 8,
     idadeMax: 14,
-    icone: '🚁',
-  },
-  {
-    id: 'memoria-animais',
-    titulo: 'Memória dos Animais',
-    descricao: 'Encontre os pares de animais escondidos.',
-    categoria: 'memória',
-    idadeMin: 5,
-    idadeMax: 10,
-    icone: '🧠',
-  },
-  {
-    id: 'caça-palavras',
-    titulo: 'Caça-Palavras',
-    descricao: 'Forme palavras e expanda seu vocabulário!',
-    categoria: 'leitura',
-    idadeMin: 6,
-    idadeMax: 12,
-    icone: '🔤',
-  },
-  {
-    id: 'matemágica',
-    titulo: 'Matemágica',
-    descricao: 'Desafios matemáticos para pequenos gênios.',
-    categoria: 'matemática',
-    idadeMin: 7,
-    idadeMax: 14,
-    icone: '🧮',
-  },
-  {
-    id: 'pintura-criativa',
-    titulo: 'Pintura Criativa',
-    descricao: 'Desenhe e pinte livremente obras de arte.',
-    categoria: 'criatividade',
-    idadeMin: 3,
-    idadeMax: 99,
-    icone: '🎨',
+    icone: '🍕',
   },
 ]
 
 export default function CatalogoJogos() {
   const navigate = useNavigate()
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
 
-  useEffect(() => {
-    const tailwindScript = document.createElement('script')
-    tailwindScript.src = 'https://cdn.tailwindcss.com'
-    document.head.appendChild(tailwindScript)
-
-    const configScript = document.createElement('script')
-    configScript.src = '/tailwind-config.js'
-    document.head.appendChild(configScript)
-
-    const token = localStorage.getItem('token')
-    setIsLoggedIn(!!token)
-
-    return () => {
-      document.head.removeChild(tailwindScript)
-      document.head.removeChild(configScript)
-    }
-  }, [])
+  const [isLoggedIn] = useState(() => !!localStorage.getItem('token'))
 
   const handleJogar = (jogoId: string) => {
     if (!isLoggedIn) {
-      navigate(`/login`)
-    } else {
+      navigate('/login')
+      return
+    }
+
+    const currentChild = localStorage.getItem('currentChildId')
+
+    if (!currentChild) {
       navigate('/escolha_perfil')
+      return
+    }
+
+    if (jogoId === 'robo-pizzaiolo') {
+      window.open(`http://localhost:5174/jogo?childId=${currentChild}`, '_blank')
     }
   }
 
   return (
     <div className="bg-sky-gradient min-h-screen relative flex flex-col items-center overflow-hidden">
+
       {/* Nuvens e montanha */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none z-0" aria-hidden="true">
         {[...Array(3)].map((_, i) => (
-          <img
-            key={i}
-            src="/imagem/Nuvens.svg"
-            className="animate-float"
-            alt=""
-          />
+          <img key={i} src="/imagem/Nuvens.svg" className="animate-float" alt="" />
         ))}
         <img
           src="/imagem/Montanha.svg"
@@ -119,13 +72,13 @@ export default function CatalogoJogos() {
             <>
               <button
                 onClick={() => navigate('/login')}
-                className="bg-white/40 text-brand-textDark rounded-full px-6 py-2 font-bold text-lg shadow-sm hover:bg-white/70 transition-all border-2 border-white/50"
+                className="bg-white/40 text-brand-text-dark rounded-full px-6 py-2 font-bold text-lg shadow-sm hover:bg-white/70 transition-all border-2 border-white/50"
               >
                 Entrar
               </button>
               <button
                 onClick={() => navigate('/cadastro')}
-                className="bg-brand-btnBg text-[#E3F4B9] rounded-full px-6 py-2 font-bold text-lg shadow-sm hover:bg-[#7da02b] transition-all border-2 border-white/40"
+                className="bg-brand-btn-bg text-[#E3F4B9] rounded-full px-6 py-2 font-bold text-lg shadow-sm hover:bg-[#7da02b] transition-all border-2 border-white/40"
               >
                 Cadastrar
               </button>
@@ -133,7 +86,7 @@ export default function CatalogoJogos() {
           ) : (
             <button
               onClick={() => navigate('/escolha_perfil')}
-              className="bg-brand-btnBg text-[#E3F4B9] rounded-full px-6 py-2 font-bold text-lg shadow-sm hover:bg-[#7da02b] transition-all border-2 border-white/40"
+              className="bg-brand-btn-bg text-[#E3F4B9] rounded-full px-6 py-2 font-bold text-lg shadow-sm hover:bg-[#7da02b] transition-all border-2 border-white/40"
             >
               Jogar
             </button>
@@ -147,33 +100,32 @@ export default function CatalogoJogos() {
           Explore nossa coleção de jogos educativos!
         </p>
 
-        {/* Grade de jogos */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {JOGOS_DEMO.map((jogo) => (
             <div
               key={jogo.id}
-              className="bg-brand-cardBg rounded-[40px] p-6 shadow-xl border-[3px] border-[#D6E2C6]/50 flex flex-col items-center text-center hover:scale-105 transition-transform"
+              className="bg-brand-card-bg rounded-[40px] p-6 shadow-xl border-[3px] border-[#D6E2C6]/50 flex flex-col items-center text-center hover:scale-105 transition-transform"
             >
               <span className="text-5xl mb-3">{jogo.icone}</span>
-              <h3 className="text-2xl font-bold text-brand-textDark mb-2">
+              <h3 className="text-2xl font-bold text-brand-text-dark mb-2">
                 {jogo.titulo}
               </h3>
-              <p className="text-brand-textDark opacity-80 mb-3 text-sm">
+              <p className="text-brand-text-dark opacity-80 mb-3 text-sm">
                 {jogo.descricao}
               </p>
               <div className="flex gap-2 mb-4">
                 {jogo.idadeMin && jogo.idadeMax && (
-                  <span className="bg-white/50 px-3 py-1 rounded-full text-sm font-bold text-brand-textDark">
+                  <span className="bg-white/50 px-3 py-1 rounded-full text-sm font-bold text-brand-text-dark">
                     {jogo.idadeMin}–{jogo.idadeMax} anos
                   </span>
                 )}
-                <span className="bg-brand-btnBg/20 text-brand-btnBg px-3 py-1 rounded-full text-sm font-bold capitalize">
+                <span className="bg-brand-btn-bg/20 text-brand-btn-bg px-3 py-1 rounded-full text-sm font-bold capitalize">
                   {jogo.categoria}
                 </span>
               </div>
               <button
                 onClick={() => handleJogar(jogo.id)}
-                className="w-full bg-brand-btnBg text-[#E3F4B9] rounded-full py-3 font-bold text-lg shadow-[0px_4px_0px_rgba(93,125,14,0.3)] hover:bg-[#7da02b] active:shadow-none active:translate-y-1 transition-all"
+                className="w-full bg-brand-btn-bg text-[#E3F4B9] rounded-full py-3 font-bold text-lg shadow-[0px_4px_0px_rgba(93,125,14,0.3)] hover:bg-[#7da02b] active:shadow-none active:translate-y-1 transition-all"
               >
                 {isLoggedIn ? 'Jogar' : 'Entrar para jogar'}
               </button>

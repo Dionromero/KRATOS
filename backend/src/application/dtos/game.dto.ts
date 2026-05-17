@@ -22,10 +22,12 @@ export const UpdateGameSchema = z.object({
 })
 
 export const SaveProgressSchema = z.object({
-  childId: z.string().uuid('Invalid child ID'),
-  gameId: z.string().uuid('Invalid game ID'),
-  score: z.number().int().min(0, 'Score cannot be negative').max(100, 'Score must be at most 100'),
-  timeSpentSeconds: z.number().int().min(0, 'Time spent cannot be negative')
+  childId: z.string().min(1, 'childId is required'),
+  // gameId aceita tanto UUID quanto slugs como 'robo-pizzaiolo'
+  gameId: z.string().min(1, 'gameId is required'),
+  // score sem limite máximo — o Zeus pode gerar valores acima de 100
+  score: z.number().min(0, 'Score cannot be negative'),
+  timeSpentSeconds: z.number().min(0, 'Time spent cannot be negative')
 })
 
 export const FilterGamesSchema = z.object({

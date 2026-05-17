@@ -1,4 +1,3 @@
-
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 
@@ -6,15 +5,7 @@ export default function Index() {
   const navigate = useNavigate()
 
   useEffect(() => {
-    const tailwindScript = document.createElement('script')
-    tailwindScript.src = 'https://cdn.tailwindcss.com'
-    document.head.appendChild(tailwindScript)
-
-    const configScript = document.createElement('script')
-    configScript.src = '/tailwind-config.js'
-    document.head.appendChild(configScript)
-
-    // Verifica se há token salvo
+    // ✅ useEffect com CDN removido — Tailwind já funciona via Vite plugin
     const token = localStorage.getItem('token')
     const nextPage = token ? '/escolha_perfil' : '/login'
 
@@ -23,8 +14,6 @@ export default function Index() {
     }, 3500)
 
     return () => {
-      document.head.removeChild(tailwindScript)
-      document.head.removeChild(configScript)
       clearTimeout(timer)
     }
   }, [navigate])
@@ -53,12 +42,12 @@ export default function Index() {
         </h1>
 
         <div className="flex space-x-4 bg-white/40 backdrop-blur-sm p-5 rounded-full shadow-lg border border-white/50">
-          <div className="w-6 h-6 bg-brand-btnBg rounded-full bounce-delay-1 shadow-sm"></div>
-          <div className="w-6 h-6 bg-brand-textDark rounded-full bounce-delay-2 shadow-sm"></div>
-          <div className="w-6 h-6 bg-brand-btnBg rounded-full bounce-delay-3 shadow-sm"></div>
+          <div className="w-6 h-6 bg-brand-btn-bg rounded-full bounce-delay-1 shadow-sm"></div>
+          <div className="w-6 h-6 bg-brand-text-dark rounded-full bounce-delay-2 shadow-sm"></div>
+          <div className="w-6 h-6 bg-brand-btn-bg rounded-full bounce-delay-3 shadow-sm"></div>
         </div>
-        
-        <p className="text-brand-textDark font-bold mt-8 text-xl bg-white/60 px-6 py-2 rounded-full backdrop-blur-sm shadow-sm">
+
+        <p className="text-brand-text-dark font-bold mt-8 text-xl bg-white/60 px-6 py-2 rounded-full backdrop-blur-sm shadow-sm">
           Preparando sua aventura...
         </p>
       </div>

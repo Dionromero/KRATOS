@@ -31,60 +31,22 @@ export class Game {
     this.props = props
   }
 
-  get id(): string {
-    return this.props.id
-  }
-
-  get title(): string {
-    return this.props.title
-  }
-
-  get description(): string {
-    return this.props.description
-  }
-
-  get category(): GameCategory {
-    return this.props.category
-  }
-
-  get difficulty(): Difficulty {
-    return this.props.difficulty
-  }
-
-  get minAge(): number {
-    return this.props.minAge
-  }
-
-  get maxAge(): number {
-    return this.props.maxAge
-  }
-
-  get pointsReward(): number {
-    return this.props.pointsReward
-  }
-
-  get isActive(): boolean {
-    return this.props.isActive
-  }
-
-  get createdAt(): Date {
-    return this.props.createdAt
-  }
-
-  get updatedAt(): Date {
-    return this.props.updatedAt
-  }
+  get id(): string { return this.props.id }
+  get title(): string { return this.props.title }
+  get description(): string { return this.props.description }
+  get category(): GameCategory { return this.props.category }
+  get difficulty(): Difficulty { return this.props.difficulty }
+  get minAge(): number { return this.props.minAge }
+  get maxAge(): number { return this.props.maxAge }
+  get pointsReward(): number { return this.props.pointsReward }
+  get isActive(): boolean { return this.props.isActive }
+  get createdAt(): Date { return this.props.createdAt }
+  get updatedAt(): Date { return this.props.updatedAt }
 
   private validateAgeRange(minAge: number, maxAge: number): void {
-    if (minAge < 0) {
-      throw new Error('Minimum age cannot be negative')
-    }
-    if (maxAge > 18) {
-      throw new Error('Maximum age cannot exceed 18')
-    }
-    if (minAge > maxAge) {
-      throw new Error('Minimum age cannot be greater than maximum age')
-    }
+    if (minAge < 0) throw new Error('Minimum age cannot be negative')
+    if (maxAge > 18) throw new Error('Maximum age cannot exceed 18')
+    if (minAge > maxAge) throw new Error('Minimum age cannot be greater than maximum age')
   }
 
   isSuitableForAge(age: number): boolean {
@@ -92,17 +54,13 @@ export class Game {
   }
 
   activate(): void {
-    if (this.props.isActive) {
-      throw new Error('Game is already active')
-    }
+    if (this.props.isActive) throw new Error('Game is already active')
     this.props.isActive = true
     this.props.updatedAt = new Date()
   }
 
   deactivate(): void {
-    if (!this.props.isActive) {
-      throw new Error('Game is already inactive')
-    }
+    if (!this.props.isActive) throw new Error('Game is already inactive')
     this.props.isActive = false
     this.props.updatedAt = new Date()
   }
@@ -114,10 +72,7 @@ export class Game {
     difficulty: Difficulty,
     pointsReward: number
   ): void {
-    if (pointsReward <= 0) {
-      throw new Error('Points reward must be positive')
-    }
-
+    if (pointsReward <= 0) throw new Error('Points reward must be positive')
     this.props.title = title
     this.props.description = description
     this.props.category = category
@@ -134,9 +89,9 @@ export class Game {
   }
 
   calculateReward(score: number): number {
-
-    const percentageScore = Math.min(score / 100, 1) 
-    return Math.floor(this.props.pointsReward * percentageScore)
+    // Normaliza o score para 0-1 com base em 1000 (max do Zeus)
+    const normalized = Math.min(score / 1000, 1)
+    return Math.floor(this.props.pointsReward * normalized)
   }
 
   toJSON() {
@@ -171,15 +126,12 @@ export class GameSession {
   }
 
   private validateScore(score: number): void {
-    if (score < 0 || score > 100) {
-      throw new Error('Score must be between 0 and 100')
-    }
+    // ✅ sem limite máximo — o Zeus gera scores acima de 100
+    if (score < 0) throw new Error('Score cannot be negative')
   }
 
   private validateTimeSpent(seconds: number): void {
-    if (seconds < 0) {
-      throw new Error('Time spent cannot be negative')
-    }
+    if (seconds < 0) throw new Error('Time spent cannot be negative')
   }
 
   isCompleted(): boolean {

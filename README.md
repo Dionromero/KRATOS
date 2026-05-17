@@ -68,8 +68,8 @@ O responsável cria uma conta, cadastra seus filhos como jogadores e acompanha o
 ### Pré-requisitos
 
 - [Bun](https://bun.sh) >= 1.0
-- [MongoDB](https://www.mongodb.com) rodando localmente na porta 27017
-- [Zeus (Pizzaria Code)](https://github.com/Dionromero/zeus) clonado e rodando na porta 5174
+- [MongoDB](https://www.mongodb.com) (local ou Atlas)
+- [Zeus (Pizzaria Code)](https://github.com/Dionromero/zeus) clonado e configurado
 
 ### Instalação
 
@@ -84,16 +84,27 @@ cd backend
 bun install
 ```
 
-Crie o arquivo `.env` na pasta `backend/`:
+Copie o arquivo de exemplo e preencha com suas credenciais:
+
+```bash
+cp .env.example .env
+```
+
+O `.env.example` contém:
+
 ```env
-MONGODB_URI=mongodb://localhost:27017/kratos
+# MongoDB
+MONGODB_URI=mongodb://<username>:<password>@<cluster-url>/<database>?ssl=true&replicaSet=<replica-set>&authSource=admin
+MONGO_URI=mongodb://<username>:<password>@<cluster-url>/<database>?ssl=true&replicaSet=<replica-set>&authSource=admin
+
+# JWT
 JWT_SECRET=sua-chave-secreta-aqui
-PORT=3001
+JWT_EXPIRES_IN=7d
 ```
 
 **Frontend:**
 ```bash
-cd frontend
+cd ../frontend
 bun install
 ```
 
@@ -102,17 +113,17 @@ bun install
 Abra **3 terminais**:
 
 ```bash
-# Terminal 1 — Backend KRATOS (porta 3001)
+# Terminal 1 — Backend KRATOS
 cd backend && bun dev
 
-# Terminal 2 — Frontend KRATOS (porta 5173)
+# Terminal 2 — Frontend KRATOS
 cd frontend && bun dev
 
-# Terminal 3 — Zeus / Pizzaria Code (porta 5174)
+# Terminal 3 — Zeus / Pizzaria Code
 cd ../zeus && bun dev
 ```
 
-Acesse `http://localhost:5173` e crie uma conta de responsável.
+Acesse o endereço exibido no terminal do frontend e crie uma conta de responsável.
 
 ### Build de produção
 
@@ -138,7 +149,7 @@ cd frontend && bun run build
 | Frontend | React 19 + Vite 8 | Ecossistema maduro, HMR rápido |
 | Estilização | Tailwind CSS v4 | Utility-first, tokens no CSS com `@theme` |
 | Roteamento | React Router v6 | Padrão do ecossistema React |
-| HTTP client | Axios | Interceptors para token e 401 automático |
+| HTTP client | Axios | Interceptors para token e redirect 401 automático |
 
 ---
 
@@ -147,6 +158,7 @@ cd frontend && bun run build
 ```
 KRATOS/
 ├── backend/
+│   ├── .env.example               # Variáveis de ambiente necessárias
 │   └── src/
 │       ├── domain/
 │       │   ├── entities/          # User, Child, Game, GameSession
@@ -217,22 +229,21 @@ KRATOS/
 O fluxo completo de integração entre KRATOS e Zeus:
 
 ```
-1. Responsável faz login no KRATOS (localhost:5173)
+1. Responsável faz login no KRATOS
 2. Seleciona o perfil do filho em /escolha_perfil
    → salva currentChildId no localStorage
    → navega para /catalogo
 3. Clica em "Jogar" no card do Robô Pizzaiolo
-   → window.open('http://localhost:5174?childId=xxx')
-4. Zeus abre na porta 5174
-   → lê childId da URL (?childId=xxx)
-   → ao vencer: POST http://localhost:3001/games/progress
+   → Zeus abre em nova aba com ?childId=xxx na URL
+4. Zeus lê o childId da URL
+   → ao vencer: POST /games/progress no backend KRATOS
 5. KRATOS recebe o score
    → salva a sessão no MongoDB
    → atualiza totalPoints do jogador
 6. Relatório em /relatorio exibe o progresso atualizado
 ```
 
-Para adicionar novos jogos, basta incluí-los em `save-progress.use-case.ts`:
+Para adicionar novos jogos no futuro, basta incluí-los em `save-progress.use-case.ts`:
 
 ```typescript
 const STATIC_GAMES = {

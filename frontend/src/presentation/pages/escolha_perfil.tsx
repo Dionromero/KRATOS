@@ -22,7 +22,7 @@ export default function EscolhaPerfil() {
   const [jogadores, setJogadores] = useState<Jogador[]>([])
   const [carregando, setCarregando] = useState(true)
 
-  // Nome do responsável lido diretamente do localStorage — sem setState no effect
+  // Nome lido diretamente do localStorage — sem setState no effect
   const [nomeInicial] = useState(() => {
     const userData = localStorage.getItem('user')
     if (!userData) return 'Responsável'
@@ -41,17 +41,13 @@ export default function EscolhaPerfil() {
     })
       .then((res) => res.json() as Promise<ApiResponse>)
       .then((data) => {
-        if (data.success) {
-          setJogadores(data.data)
-        }
+        if (data.success) setJogadores(data.data)
       })
       .catch((error: unknown) => {
         if (error instanceof DOMException && error.name === 'AbortError') return
         console.error('Erro ao carregar jogadores:', error)
       })
-      .finally(() => {
-        setCarregando(false)
-      })
+      .finally(() => setCarregando(false))
 
     return () => controller.abort()
   }, [])
@@ -154,6 +150,10 @@ export default function EscolhaPerfil() {
               jogadores.map((jogador, index) => (
                 <button
                   key={jogador.id}
+                  onClick={() => {
+                    localStorage.setItem('currentChildId', jogador.id)
+                    navigate('/catalogo')
+                  }}
                   className="w-full flex items-center gap-4 p-4 hover:bg-white/40 rounded-[24px] transition-colors cursor-pointer"
                 >
                   <div className="w-[60px] h-[60px] bg-white rounded-full border-[3px] border-brand-btn-border flex items-center justify-center text-3xl shadow-sm shrink-0 overflow-hidden">

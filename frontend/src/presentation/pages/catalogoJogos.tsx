@@ -14,11 +14,11 @@ interface Jogo {
 const JOGOS_DEMO: Jogo[] = [
   {
     id: 'robo-pizzaiolo',
-    titulo: 'Robô Pizzaiolo',
+    titulo: 'PizzaCode',
     descricao: 'Programe um robô para fazer pizzas! Aprenda lógica de programação.',
     categoria: 'lógica',
-    idadeMin: 8,
-    idadeMax: 14,
+    idadeMin: 14,
+    idadeMax: 18,
     icone: '🍕',
   },
 ]
